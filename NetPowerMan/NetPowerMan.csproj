@@ -257,7 +257,7 @@
     <Resource Include="logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Preview\Preview.png" />
+    <None Include="Resources\Preview\Preview2.png" />
     <Resource Include="lottie_sharp.ico" />
     <Content Include="Properties\AssemblyInfo.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

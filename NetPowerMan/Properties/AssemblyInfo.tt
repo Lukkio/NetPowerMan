@@ -1,0 +1,111 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Globalization" #>
+
+<#@ output extension=".cs" #>
+
+<#
+    string output = File.ReadAllText(this.Host.ResolvePath("AssemblyInfo.cs"));
+    Regex pattern = new Regex("AssemblyVersion\\(\"(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<revision>\\d+)\\.(?<build>\\d+)\"\\)");
+    MatchCollection matches = pattern.Matches(output);
+    if( matches.Count == 1 )
+    {
+        BuildTime = DateTime.Now.ToString("yyyy.M.d");
+        major = Convert.ToInt32(matches[0].Groups["major"].Value);
+        minor = Convert.ToInt32(matches[0].Groups["minor"].Value);
+        build = Convert.ToInt32(matches[0].Groups["build"].Value) + 1;
+        revision = Convert.ToInt32(matches[0].Groups["revision"].Value);
+        if( this.Host.ResolveParameterValue("-","-","BuildConfiguration") == "Release" )
+            revision++;
+    }
+
+    const string FMT_DATE_FORMAL            = "";
+    const string FMT_DATE_COMMENT           = "MMMM d, yyyy h:mm:ss.ffffff tt";
+
+    DateTime dtBuildDate            = DateTime.UtcNow;
+    string   strNamespace           = String.Empty;
+    //string   strFormatDisplay       = String.IsNullOrEmpty(FMT_DATE_FORMAL) ? CultureInfo.InstalledUICulture.DateTimeFormat.FullDateTimePattern : FMT_DATE_FORMAL;
+    string   strFormatDisplay       ="MM/dd/yyyy h:mm tt";
+#>
+
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Resources;
+using System;
+using System.Windows;
+using System.Globalization;
+
+// General Information
+[assembly: AssemblyTitle("PowerManager")]
+[assembly: AssemblyDescription("PowerManager")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Lucio")]
+[assembly: AssemblyProduct("PowerManager")]
+[assembly: AssemblyCopyright("© 2023")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+[assembly: Guid("f358593f-c34f-458c-b782-98592c5afaa2")]
+
+// Se si imposta ComVisible su false, i tipi in questo assembly non saranno visibili
+// ai componenti COM. Se è necessario accedere a un tipo in questo assembly da
+// COM, impostare su true l'attributo ComVisible per tale tipo.
+[assembly: ComVisible(false)]
+
+//Per iniziare a creare applicazioni localizzabili, impostare
+//<UICulture>CultureYouAreCodingWith</UICulture> nel file .csproj
+//all'interno di un <PropertyGroup>.  Ad esempio, se si utilizza l'inglese (Stati Uniti)
+//nei file di origine, impostare <UICulture> su en-US.  Rimuovere quindi il commento dall'attributo
+//NeutralResourceLanguage riportato di seguito.  Aggiornare "en-US" nella
+//riga sottostante in modo che corrisponda all'impostazione UICulture nel file di progetto.
+
+//[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
+
+
+[assembly: ThemeInfo(
+    ResourceDictionaryLocation.None, //dove si trovano i dizionari delle risorse specifiche del tema
+                                     //(da usare se nella pagina non viene trovata una risorsa,
+                                     // oppure nei dizionari delle risorse dell'applicazione)
+    ResourceDictionaryLocation.SourceAssembly //dove si trova il dizionario delle risorse generiche
+                                              //(da usare se nella pagina non viene trovata una risorsa,
+                                              // nell'applicazione o nei dizionari delle risorse specifiche del tema)
+)]
+
+// Version informationr(
+[assembly: AssemblyVersion("<#= this.major #>.<#= this.minor #>.<#= this.revision #>.<#= this.build #>")]
+[assembly: AssemblyFileVersion("<#= this.major #>.<#= this.minor #>.<#= this.revision #>.<#= this.build #>")]
+[assembly: NeutralResourcesLanguageAttribute( "en-US" )]
+
+namespace TmdbLockUpWpf
+{
+    public static class BuildInfo
+    {
+        private const long              BUILD_DATE_BINARY_UTC       = 0x<#=dtBuildDate.ToBinary().ToString("x16") #>;    // <#=dtBuildDate.ToString(FMT_DATE_COMMENT) #> UTC
+
+        private static AssemblyName     BuildAssemblyName { get; }  = Assembly.GetExecutingAssembly().GetName();
+        public static DateTimeOffset    BuildDateUtc { get; }       = DateTime.FromBinary(BUILD_DATE_BINARY_UTC);
+        public static string            ModuleText { get; }         =  BuildAssemblyName.Name;
+        public static string            VersionText { get; }        = "v" + BuildAssemblyName.Version.ToString()
+#if DEBUG
+                                                                                + " [DEBUG]"
+#endif
+                                                                                ;
+
+        public static string            BuildDateText { get; }      = "<#=dtBuildDate.ToString(strFormatDisplay) #> UTC";
+        public static string            DisplayText { get; }        = $"{ModuleText} {VersionText} (Build Date: {BuildDateText})";
+    }
+}
+
+<#+
+    int major = 2;
+    int minor = 0;
+    int revision = 0;
+    int build = 0;
+    string BuildTime = "";
+#>

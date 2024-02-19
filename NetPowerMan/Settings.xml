@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+	<Setting Theme="Dark" Background="#9F1A2032" NotifyStatus="False" SessionEndingDetect="True" />
+	<Device ID="0" Name="PC camera" IP="192.168.1.20" MAC="24:4B:FE:5B:10:90" QueryMode="2" Enabled="True" DefaultShutDown="True" DefaultReboot="True" User="lucio" Password="Ca%$iemoD%$/6vo!!!" Message="Bye Bye! API" MessageTimeout="2"/>
+	<Device ID="1" Name="PC vi. win" IP="192.168.1.20" MAC="24:4B:FE:5B:10:90" QueryMode="2" Enabled="True" DefaultShutDown="True" DefaultReboot="False" User="vboxuser" Password="16121989" Message="Bye Bye! API" MessageTimeout="12"/>
+	<Device ID="2" Name="PC vi. linux" IP="192.168.1.21" MAC="24:4B:FE:5B:10:90" QueryMode="1" Enabled="True" DefaultShutDown="True" DefaultReboot="False" User="vboxuser" Password="16121989" Message="Bye Bye! API" MessageTimeout="2"/>
+	<Device ID="3" Name="tasmota" IP="192.168.1.2" MAC="12:12:12:12:12:12" QueryMode="2" Enabled="False" DefaultShutDown="True" DefaultReboot="False" User="fpadmini" Password="1234" Message="Bye Bye! CNC" MessageTimeout="3"/>
+	<Device ID="4" Name="OpenWrt" IP="192.168.1.3" MAC="12:12:12:12:12:12" QueryMode="0" Enabled="False" DefaultShutDown="True" DefaultReboot="False" User="fpadmini" Password="1234" Message="Bye Bye! CNC" MessageTimeout="6"/>
+	<Device ID="5" Name="Home assistant" IP="192.168.1.16" MAC="12:12:12:12:12:12" QueryMode="3" Enabled="False" DefaultShutDown="True" DefaultReboot="False" User="fpadmini" Password="1234" Message="Bye Bye! CNC" MessageTimeout="1"/>
+	<Device ID="6" Name="Alexa" IP="192.168.1.6" MAC="12:12:12:12:12:12" QueryMode="2" Enabled="False" DefaultShutDown="True" DefaultReboot="False" User="fpadmini" Password="1234" Message="Bye Bye! CNC" MessageTimeout="5"/>
+	<Device ID="7" Name="LGwebOS" IP="192.168.1.8" MAC="7C:1C:4E:E0:97:94" QueryMode="0" Enabled="True" DefaultShutDown="False" DefaultReboot="False" User="fpadmini" Password="1234" Message="Bye Bye! CNC" MessageTimeout="5"/>
+	<Device ID="8" Name="GalaxyTabA" IP="192.168.1.18" MAC="12:12:12:12:12:12" QueryMode="2" Enabled="False" DefaultShutDown="True" DefaultReboot="False" User="fpadmini" Password="1234" Message="Bye Bye! CNC" MessageTimeout="8"/>
+</Root>

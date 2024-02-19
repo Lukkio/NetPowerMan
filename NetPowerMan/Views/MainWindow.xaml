@@ -1,0 +1,358 @@
+﻿<Window x:Class="NetPowerMan.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:viewmodels="clr-namespace:NetPowerMan.ViewModels" 
+        xmlns:lottie="clr-namespace:LottieSharp.WPF;assembly=LottieSharp"
+        xmlns:local="clr-namespace:NetPowerMan.Views" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+        mc:Ignorable="d"
+        Title="NetPowerMan" WindowStyle="None" BorderBrush="Transparent" BorderThickness="0" ResizeMode="NoResize" 
+        SizeToContent="WidthAndHeight" Background="Transparent" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown"
+        AllowsTransparency="True" Width="330" Height="240">
+    
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+        <Storyboard x:Key="WindowOn">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="{x:Null}" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0.15"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.1000000" Value="0.30"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.2000000" Value="0.45"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.60"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.4000000" Value="0.75"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.5000000" Value="0.90"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:00.6000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <local:BooleanToVisibilityConverter x:Key="VisibleIfTrue" True="Visible" False="Hidden" />
+        <local:BooleanToVisibilityConverter x:Key="VisibleIfFalse" True="Hidden" False="Visible" />
+        <local:StringToColorConverter x:Key="StringToColor" />
+        <Duration x:Key="MyCustomDuration">0:0:10</Duration>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource WindowOn}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Border Background="{Binding Path=Background, Converter={StaticResource StringToColor}}" Margin="0,0,0,0" 
+            BorderBrush="#501e2024" BorderThickness="1">
+
+        <Grid Name="MainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="150"/>
+                <ColumnDefinition Width="*" MinWidth="150"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="36"/>
+                <RowDefinition Height="128"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Title}" HorizontalAlignment="Center"
+                Foreground="{DynamicResource LabelForeground}" FontWeight="SemiBold" VerticalAlignment="Center"
+                FontFamily="Segoe UI" Margin="0,0,0,5"/>
+
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ContextMenu>
+                    <ContextMenu>
+                        <!--<MenuItem Header="Dark" Click="MenuItem_Click" Foreground="White"/>
+                        <MenuItem Header="Light" Click="MenuItem_Click_1" Foreground="White"/>-->
+                        <MenuItem Header="Settings" Command="{Binding Path=OpenSettings}" Foreground="White">
+                            <MenuItem.Icon>
+                                <Image Source="/Resources/setting_w.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Simul" IsCheckable="True" IsChecked="{Binding IsSimul}" Command="{Binding SimulCommand}" Foreground="White"/>
+                        <MenuItem Header="About" Foreground="White"/>
+                        <MenuItem Header="Exit" Click="ExitApp" Foreground="White"/>
+                    </ContextMenu>
+                </Grid.ContextMenu>
+                <Button Grid.Column="1" Grid.Row="0" Width="30" Height="30" HorizontalAlignment="Right" Click="Button_Close_Click"
+                        Margin="0,0,0,0" Background="Transparent" BorderThickness="0">
+                    <Button.ToolTip>
+                        <TextBlock Text="Close" FontWeight="Normal" Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI"/>
+                    </Button.ToolTip>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="LightBlue" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border x:Name="Border" Background="{TemplateBinding Background}" CornerRadius="0,0,0,0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#10FFFFFF" TargetName="Border" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                    <StackPanel Width="24" Height="24">
+                        <Image Source="{DynamicResource CloseSmallButtonImage}" Stretch="Fill"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <Button Grid.Column="0" Grid.Row="1" Width="128" Background="#10FFFFFF" HorizontalAlignment="Stretch"
+                    BorderThickness="1" Command="{Binding MainCommand}" CommandParameter="MainShutDown" Margin="19,0,0,0" 
+                    Visibility="{Binding Path=IsVisible, Converter={StaticResource VisibleIfTrue}}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="LightBlue" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" CornerRadius="{StaticResource ButtonCornerRadius}" 
+                                            Background="{TemplateBinding Background}" BorderThickness="0" 
+                                            BorderBrush="{DynamicResource ButtonSeparatorColor}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#15FFFFFF" TargetName="Border" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <Image Source="{DynamicResource ShutdownButtonImage}" Stretch="Fill" Width="100" Height="100"/>
+            </Button>
+            <Button Grid.Column="1" Grid.Row="1" Width="128" Background="#10FFFFFF" Margin="0,0,15,0" BorderThickness="1" 
+                    Command="{Binding MainCommand}" CommandParameter="MainReboot" HorizontalAlignment="Stretch"
+                    Visibility="{Binding Path=IsVisible, Converter={StaticResource VisibleIfTrue}}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" CornerRadius="{StaticResource ButtonCornerRadius}" 
+                                            Background="{TemplateBinding Background}" BorderThickness="0" 
+                                            BorderBrush="{DynamicResource ButtonSeparatorColor}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#15FFFFFF" TargetName="Border" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <Image Source="{DynamicResource RebootButtonImage}" Stretch="Fill" Width="100" Height="100"/>
+            </Button>
+
+            <Border Grid.Column="0" Grid.Row="1" BorderThickness="0,0,2,0" Background="#10FFFFFF" Grid.ColumnSpan="2" 
+                    CornerRadius="{StaticResource ButtonCornerRadius}" Margin="25,0,20,0"
+                    Visibility="{Binding Path=IsVisible, Converter={StaticResource VisibleIfFalse}}"/>
+            <TextBlock Text="{Binding PendingStatus}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" 
+                       Margin="{Binding Labelmargin}" VerticalAlignment="Center" FontSize="40" FontWeight="SemiBold"
+                       Visibility="{Binding Path=IsVisible, Converter={StaticResource VisibleIfFalse}}"
+                       Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI">
+                 <!--<TextBlock.BitmapEffect>
+                    <DropShadowBitmapEffect Color="#19FF4500" Softness=".6" Direction="90" ShadowDepth="0" />
+                </TextBlock.BitmapEffect>-->
+            </TextBlock>
+
+            <!--<local:Spinner Name="test" Visibility="{Binding Path=IsVisible, Converter={StaticResource VisibleIfFalse}}" Height="20" Width="20" Margin="0" Duration2="{StaticResource MyCustomDuration}" SpinnerColor="Yellow"/>-->
+            <!--<local:Spinner Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,60,0,0" Visibility="{Binding Path=IsVisible, Converter={StaticResource VisibleIfFalse}}" Height="20" Width="20" Duration2="0:0:10" SpinnerColor="Orange"/>-->
+            <!--<app:Spinner Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding Path=IsVisible, Converter={StaticResource VisibleIfFalse}}" Height="15" Width="15" Margin="0,60,0,0" Duration="0:0:10" SpinnerColor="Yellow"/>-->
+
+            <lottie:LottieAnimationView Margin="0,45,0,0" x:Name="Lottiewait" Width="80" Grid.Column="0" AutoPlay="True" Grid.Row="1" 
+                                        Grid.ColumnSpan="2" VerticalAlignment="Center" RepeatCount="-1"
+                                        Height="90" HorizontalAlignment="Center" MouseDown="Spinner_MouseDown"
+                                        Visibility="{Binding Path=IsVisible, Converter={StaticResource VisibleIfFalse}}"
+                                        ResourcePath="pack://application:,,,/Resources/circles-menu-1.json">
+                <lottie:LottieAnimationView.ToolTip>
+                    <TextBlock Text="Stop" FontWeight="Normal" 
+                                Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI"/>
+                </lottie:LottieAnimationView.ToolTip>
+            </lottie:LottieAnimationView>
+
+            <Expander x:Name="exp" Width="318" Style="{DynamicResource ExpanderStyle1}" Grid.Column="0" Grid.Row="2" 
+                      Grid.ColumnSpan="2" IsExpanded="False" FontWeight="SemiBold" Margin="0,10,0,18" Expanded="ExpanderExpanded" 
+                      Collapsed="ExpanderCollapsed">
+                <Expander.Header>
+                    <Grid x:Name="ExpanderHeaderGrid" Margin="0,0,0,-1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Border x:Name="ExpanderBorder" BorderThickness="0" Background="#10FFFFFF" Grid.ColumnSpan="3" 
+                                CornerRadius="{StaticResource ButtonCornerRadius}" Margin="0,0,20,0"/>
+                        <TextBlock Text="Network" Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource LabelForeground}" 
+                                   FontWeight="SemiBold" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="Segoe UI" 
+                                   FontSize="13"/>
+                    </Grid>
+                </Expander.Header>
+                <StackPanel Margin="6,0,0,2">
+                    <ItemsControl x:Name="ItemsNetworkListView" ItemsSource="{Binding Devices}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="18,1,22,0" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ContextMenu>
+                                        <ContextMenu Grid.Column="0" Grid.Row="0">
+                                            <MenuItem Header="Shell" Command="{Binding ShellCommand}" Foreground="White" FontWeight="Normal"/>
+                                            <MenuItem Header="Details" Command="{Binding ShellCommand}" Foreground="White" FontWeight="Normal"/>
+                                        </ContextMenu>
+                                    </Grid.ContextMenu>
+
+                                    <Border BorderThickness="0" BorderBrush="{DynamicResource ButtonSeparatorColor}" Grid.ColumnSpan="7" 
+                                            CornerRadius="{Binding Path=LastItemCorner}" Background="#10FFFFFF"/>
+
+                                    <Ellipse x:Name="dot" Width="10" Height="10" Grid.Column="0" Grid.Row="0" Margin="5,0,5,0"
+                                             Fill="{Binding Path=DeviceStatusColor, Converter={StaticResource StringToColor}}" 
+                                             Visibility="{Binding Path=AcceptCommand, Converter={StaticResource VisibleIfTrue}}"
+                                             VerticalAlignment="Center" >
+                                        <Ellipse.ToolTip>
+                                            <TextBlock Text="{Binding DeviceStatus}" FontWeight="Normal" 
+                                                       Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI"/>
+                                        </Ellipse.ToolTip>
+                                        <Ellipse.BitmapEffect>
+                                            <DropShadowBitmapEffect Color="{Binding Path=DeviceStatusColorShadow, Converter={StaticResource StringToColor}}" 
+                                                                    Direction="0" ShadowDepth="0" Softness=".2" />
+                                        </Ellipse.BitmapEffect>
+                                    </Ellipse>
+
+                                    <local:Spinner Grid.Column="0" Grid.Row="0" Visibility="{Binding Path=AcceptCommand, Converter={StaticResource VisibleIfFalse}}" 
+                                                   From="0" To="360" Height="15" Width="15" Margin="0" Duration2="0:0:2" SpinnerColor="WhiteSmoke">
+                                        <local:Spinner.ToolTip>
+                                            <TextBlock Text="{Binding DeviceStatus}" FontWeight="Normal" 
+                                                Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI"/>
+                                        </local:Spinner.ToolTip>
+                                    </local:Spinner>
+
+                                    <TextBlock Text="{Binding Path=Name}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" 
+                                        TextTrimming="CharacterEllipsis" Margin="0,0,0,0" FontFamily="Segoe UI" FontSize="13"
+                                        FontWeight="SemiBold" Foreground="{DynamicResource LabelForeground}">
+                                        <TextBlock.ToolTip>
+                                            <TextBlock Text="{Binding Path=IP}" FontWeight="Normal" FontFamily="Segoe UI"
+                                                       Foreground="{DynamicResource LabelForeground}" />
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+
+                                    <Button Grid.Column="3" Grid.Row="0"  Width="24" Height="24" Background="Transparent" 
+                                            Margin="0,0,2,0" BorderThickness="0" Command="{Binding ButtonCommand}" CommandParameter="ThisShutDown"
+                                            Visibility="{Binding Path=Enabled, Converter={StaticResource VisibleIfTrue}}">
+                                        <Button.Style>
+                                            <Style TargetType="{x:Type Button}">
+                                                <Setter Property="Background" Value="LightBlue" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                            <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background" Value="#10FFFFFF" TargetName="Border" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                        <Button.ToolTip>
+                                            <TextBlock Text="Shutdown / Wake on Lan" FontWeight="Normal" 
+                                                       Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI"/>
+                                        </Button.ToolTip>
+                                        <Image Source="{DynamicResource PoweroffSmallButtonImage}" Stretch="UniformToFill"/>
+                                    </Button>
+                                    <Button Grid.Column="5" Grid.Row="0"  Width="24" Height="24" Background="Transparent" 
+                                        BorderThickness="0" Command="{Binding ButtonCommand}" CommandParameter="ThisReboot" Margin="5,0,5,0"
+                                        Visibility="{Binding Path=Enabled, Converter={StaticResource VisibleIfTrue}}">
+                                        <Button.Style>
+                                            <Style TargetType="{x:Type Button}">
+                                                <Setter Property="Background" Value="LightBlue" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                            <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background" Value="#10FFFFFF" TargetName="Border" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                        <Button.ToolTip>
+                                            <TextBlock Text="Reboot" FontWeight="Normal" 
+                                                       Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI"/>
+                                        </Button.ToolTip>
+                                        <Image Source="{DynamicResource RebootSmallButtonImage}" Stretch="UniformToFill"/>
+                                    </Button>
+                                    <CheckBox Style="{DynamicResource MycusatomCheckBox}" 
+                                              BorderBrush="{DynamicResource BorderColor}" Background="Transparent" 
+                                              Grid.Row="0" Grid.Column="4" Content="" IsChecked="{Binding Path=DefaultShutDown}" 
+                                              BorderThickness="0" VerticalAlignment="Center" Margin="0,0,0,0" 
+                                              Visibility="{Binding Path=Enabled, Converter={StaticResource VisibleIfTrue}}">
+                                        <CheckBox.ToolTip>
+                                            <TextBlock Text="Link to main Shutdown" FontWeight="Normal" 
+                                                       Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI"/>
+                                        </CheckBox.ToolTip>
+                                    </CheckBox>
+                                    <CheckBox Margin="0,0,5,0" Style="{DynamicResource MycusatomCheckBox}" 
+                                              BorderBrush="{DynamicResource BorderColor}" 
+                                              Background="Transparent" Grid.Row="0" Grid.Column="6" Content="" 
+                                              IsChecked="{Binding Path=DefaultReboot}" 
+                                              VerticalAlignment="Center" BorderThickness="0"
+                                              Visibility="{Binding Path=Enabled, Converter={StaticResource VisibleIfTrue}}">
+                                        <CheckBox.ToolTip>
+                                            <TextBlock Text="Link to main reboot" FontWeight="Normal" 
+                                                       Foreground="{DynamicResource LabelForeground}" FontFamily="Segoe UI"/>
+                                        </CheckBox.ToolTip>
+                                    </CheckBox>
+                                    <Border BorderBrush="{DynamicResource LabelForeground}" BorderThickness="0,0,1,0" 
+                                            Grid.Column="4" Margin="0,3,0,3"
+                                            Visibility="{Binding Path=Enabled, Converter={StaticResource VisibleIfTrue}}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Expander>
+        </Grid>
+    </Border>
+</Window>

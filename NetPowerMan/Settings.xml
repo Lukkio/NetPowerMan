@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
 	<Setting Theme="Dark" Background="#9F1A2032" NotifyStatus="False" SessionEndingDetect="True" />
-	<Device ID="0" Name="PC camera" IP="192.168.1.20" MAC="24:4B:FE:5B:10:90" QueryMode="2" Enabled="True" DefaultShutDown="True" DefaultReboot="True" User="lucio" Password="Ca%$iemoD%$/6vo!!!" Message="Bye Bye! API" MessageTimeout="2"/>
+	<Device ID="0" Name="PC camera" IP="192.168.1.20" MAC="24:4B:FE:5B:10:90" QueryMode="2" Enabled="True" DefaultShutDown="True" DefaultReboot="True" User="lucio" Password="Test" Message="Bye Bye! API" MessageTimeout="2"/>
 	<Device ID="1" Name="PC vi. win" IP="192.168.1.20" MAC="24:4B:FE:5B:10:90" QueryMode="2" Enabled="True" DefaultShutDown="True" DefaultReboot="False" User="vboxuser" Password="16121989" Message="Bye Bye! API" MessageTimeout="12"/>
 	<Device ID="2" Name="PC vi. linux" IP="192.168.1.21" MAC="24:4B:FE:5B:10:90" QueryMode="1" Enabled="True" DefaultShutDown="True" DefaultReboot="False" User="vboxuser" Password="16121989" Message="Bye Bye! API" MessageTimeout="2"/>
 	<Device ID="3" Name="tasmota" IP="192.168.1.2" MAC="12:12:12:12:12:12" QueryMode="2" Enabled="False" DefaultShutDown="True" DefaultReboot="False" User="fpadmini" Password="1234" Message="Bye Bye! CNC" MessageTimeout="3"/>

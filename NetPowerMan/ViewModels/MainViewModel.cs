@@ -28,6 +28,7 @@ namespace NetPowerMan.ViewModels
         public event DeviceStatus DeviceStatusChanged;
         MainModel _mainmodel;
         private string _title;
+        private bool _sessionEndingDetected;
         public string Title 
         {
             get { return _title; }
@@ -232,6 +233,7 @@ namespace NetPowerMan.ViewModels
             if (e.Reason == SessionEndReasons.SystemShutdown)
             {
                 e.Cancel = true;
+                _sessionEndingDetected = true;
                 //Resume ping if off da implementare
                 foreach (var device in Devices)
                 {
@@ -293,17 +295,22 @@ namespace NetPowerMan.ViewModels
                 if (a2.Result == 3) 
                 {
                     _logger.Error("Shutdown error, Timeout");
-                    _showMessage.ShowMessageError("Shutdown error, Timeout", "Error"); 
+                    _showMessage.ShowMessageError("Shutdown error, Timeout", "Error");
+                    IsVisible = true;
+                    _sessionEndingDetected = false;
                 }
                 if (a2.Result == 2) 
-                {
-                    
+                {         
                     PendingStatus = " Goodbye...";
                     _logger.Info("MonitorAllDevices: Shutdown NOW!");
                     //_mainmodel.ShutDownThis();
                     await Task.Delay(1000);
                     DisposeLabelDot.Cancel();
-                    //Application.Current.Shutdown();
+                    if (!IsSimul) 
+                    {
+                        if(!_sessionEndingDetected) _mainmodel.ShutDownThis();
+                        Application.Current.Shutdown(); 
+                    }
                 } //Shutdown
             }
         }
